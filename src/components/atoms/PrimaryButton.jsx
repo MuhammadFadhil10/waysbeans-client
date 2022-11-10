@@ -1,18 +1,16 @@
 import * as React from 'react';
 import { Button } from 'react-bootstrap';
 
-export const PrimaryButton = ({ btnName, onClick, width }) => {
+export const PrimaryButton = ({ btnName, onClick, width, outline }) => {
 	const style = {
-		backgroundColor: '#613D2B',
-		border: 'none',
+		backgroundColor: outline ? 'none' : '#613D2B',
+		border: outline ? '2px solid #613D2B' : 'none',
 		fontWeight: '700',
-		fontSize: '18px',
 		width: width,
-
-		// letterSpacing: '2px',
+		color: outline ? '#613D2B' : '#fff',
 	};
 	return (
-		<Button style={style} onClick={onClick}>
+		<Button style={style} variant='none' onClick={onClick}>
 			{btnName}
 		</Button>
 	);
