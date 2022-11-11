@@ -14,7 +14,6 @@ export const Home = () => {
 	const { data: products, refetch } = useQuery('productsCache', async () => {
 		try {
 			const response = await API.get('/products');
-			console.log(response.data.data.products);
 			return response.data.data.products;
 		} catch (error) {
 			console.log(error);

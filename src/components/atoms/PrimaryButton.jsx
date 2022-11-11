@@ -1,7 +1,13 @@
 import * as React from 'react';
-import { Button } from 'react-bootstrap';
+import { Button, Spinner } from 'react-bootstrap';
 
-export const PrimaryButton = ({ btnName, onClick, width, outline }) => {
+export const PrimaryButton = ({
+	btnName,
+	onClick,
+	width,
+	outline,
+	isLoading,
+}) => {
 	const style = {
 		backgroundColor: outline ? 'none' : '#613D2B',
 		border: outline ? '2px solid #613D2B' : 'none',
@@ -11,7 +17,7 @@ export const PrimaryButton = ({ btnName, onClick, width, outline }) => {
 	};
 	return (
 		<Button style={style} variant='none' onClick={onClick}>
-			{btnName}
+			{isLoading ? <Spinner animation='border' /> : btnName}
 		</Button>
 	);
 };
