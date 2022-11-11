@@ -1,13 +1,25 @@
 import * as React from 'react';
-import { Container, Image } from 'react-bootstrap';
+import { Card, Col, Container, Image, Row } from 'react-bootstrap';
 import { PrimaryButton } from '../components/atoms/PrimaryButton';
 import { NavBar } from '../components/NavBar';
 
 import bannerImage from '../assets/images/banner-image.png';
 import bannerIcon from '../assets/images/banner-icon.svg';
 import bannerWaves from '../assets/icons/banner-waves.svg';
+import { useQuery } from 'react-query';
+import { API } from '../config/api';
+import convertRupiah from 'rupiah-format';
 
 export const Home = () => {
+	const { data: products, refetch } = useQuery('productsCache', async () => {
+		try {
+			const response = await API.get('/products');
+			console.log(response.data.data.products);
+			return response.data.data.products;
+		} catch (error) {
+			console.log(error);
+		}
+	});
 	return (
 		<>
 			<Container className='p-0' style={{ marginTop: '100px' }}>
@@ -21,7 +33,7 @@ export const Home = () => {
 				>
 					<div className='w-50' style={{ color: '#000' }}>
 						<Image src={bannerIcon} alt='banner icon' width='473px' />
-						<h1>BEST QUALITY COFFEE</h1>
+						<h1 className='fs-3'>BEST QUALITY COFFEE BEANS</h1>
 						<h2 className='fs-5'>
 							Quality freshly roasted coffee made just for you. Pour, brew and
 							enjoy
@@ -43,7 +55,32 @@ export const Home = () => {
 					/>
 				</div>
 				{/* products container */}
-				<div></div>
+				<div className='mt-5'>
+					<Row>
+						{products?.map((product) => (
+							<Col className='col-3'>
+								<Card
+									className='mb-5'
+									style={{
+										backgroundColor: '#F6E6DA',
+										border: 'none',
+									}}
+								>
+									<Image
+										src={product.photo}
+										height='312px'
+										style={{ backgroundColor: 'gray' }}
+									/>
+									<Card.Body>
+										<h1 className='fs-3'>{product.name}</h1>
+										<p>{convertRupiah.convert(product.price)}</p>
+										<p>Stock: {product.stock}</p>
+									</Card.Body>
+								</Card>
+							</Col>
+						))}
+					</Row>
+				</div>
 			</Container>
 		</>
 	);

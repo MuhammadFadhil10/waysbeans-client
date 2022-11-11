@@ -8,10 +8,10 @@ import { PrimaryButton } from './atoms/PrimaryButton';
 export const NavBar = () => {
 	return (
 		<Navbar
-			className='position-fixed top-0 w-100 shadow px-5 d-flex justify-content-between'
+			className='position-fixed position-absolute top-0 w-100 shadow px-5 d-flex justify-content-between'
 			expand='lg'
 			style={{ height: '75px' }}
-		>
+		>   
 			<Link to='/'>
 				<Image src={brandLogo} alt='logo' />
 			</Link>
