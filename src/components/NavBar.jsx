@@ -25,7 +25,7 @@ export const NavBar = () => {
 	return (
 		<>
 			<Navbar
-				className=' bg-light position-fixed position-absolute top-0 w-100 shadow px-5 d-flex justify-content-between'
+				className=' bg-light w-100 shadow px-5 d-flex justify-content-between mb-5'
 				expand='lg'
 				style={{ height: '75px', zIndex: '999' }}
 			>

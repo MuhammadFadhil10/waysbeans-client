@@ -9,6 +9,7 @@ import { NavBar } from './components/NavBar';
 import { LoginContext } from './contexts/LoginContext';
 import { UserContext, UserProvider } from './contexts/UserContext';
 import { API, setAuthToken } from './config/api';
+import { ProductDetail } from './pages/ProductDetail';
 
 function App() {
 	const [isLogin, setIsLogin] = React.useState(false);
@@ -27,6 +28,7 @@ function App() {
 						<NavBar />
 						<Routes>
 							<Route path='/' element={<Home />} />
+							<Route path='/product/:id' element={<ProductDetail />} />
 						</Routes>
 					</BrowserRouter>
 				</UserProvider>

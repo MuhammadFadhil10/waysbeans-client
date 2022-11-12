@@ -11,8 +11,10 @@ import { API } from '../config/api';
 import convertRupiah from 'rupiah-format';
 import { LoginContext } from '../contexts/LoginContext';
 import { UserContext } from '../contexts/UserContext';
+import { useNavigate } from 'react-router-dom';
 
 export const Home = () => {
+	const navigate = useNavigate();
 	const { data: products, refetch } = useQuery('productsCache', async () => {
 		try {
 			const response = await API.get('/products');
@@ -22,14 +24,9 @@ export const Home = () => {
 		}
 	});
 
-	// const { userData, setUserData } = React.useContext(UserContext);
-
-	// React.useEffect(() => {
-	// 	console.log(userData);
-	// }, []);
 	return (
 		<>
-			<Container className='p-0' style={{ marginTop: '100px' }}>
+			<Container className='p-0'>
 				<div
 					className='pt-2 px-5 d-flex justify-content-between align-items-center'
 					style={{
@@ -38,10 +35,12 @@ export const Home = () => {
 						height: '400px',
 					}}
 				>
-					<div className='w-50' style={{ color: '#000' }}>
+					<div className='w-50'>
 						<Image src={bannerIcon} alt='banner icon' width='473px' />
-						<h1 className='fs-3'>BEST QUALITY COFFEE BEANS</h1>
-						<h2 className='fs-5'>
+						<h1 className='fs-3' style={{ color: '#000' }}>
+							BEST QUALITY COFFEE BEANS
+						</h1>
+						<h2 className='fs-5' style={{ color: '#000' }}>
 							Quality freshly roasted coffee made just for you. Pour, brew and
 							enjoy
 						</h2>
@@ -65,23 +64,29 @@ export const Home = () => {
 				<div className='mt-5'>
 					<Row>
 						{products?.map((product) => (
-							<Col className='col-3'>
+							<Col className='col-3' key={product.id}>
 								<Card
 									className='mb-5'
 									style={{
 										backgroundColor: '#F6E6DA',
 										border: 'none',
+										cursor: 'pointer',
 									}}
+									onClick={() => navigate(`/product/${product.id}`)}
 								>
 									<Image
 										src={product.photo}
 										height='212px'
-										style={{ backgroundColor: 'gray' }}
+										style={{ backgroundColor: 'gray', objectFit: 'fill' }}
 									/>
 									<Card.Body>
-										<h1 className='fs-4'>{product.name}</h1>
-										<p>{convertRupiah.convert(product.price)}</p>
-										<p>Stock: {product.stock}</p>
+										<h1 className='fs-4 main-text-color'>{product.name}</h1>
+										<p className='secondary-text-color'>
+											{convertRupiah.convert(product.price)}
+										</p>
+										<p className='secondary-text-color'>
+											Stock: {product.stock}
+										</p>
 									</Card.Body>
 								</Card>
 							</Col>
