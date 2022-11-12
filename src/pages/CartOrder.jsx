@@ -35,6 +35,21 @@ export const CartOrder = () => {
 		refetchCart();
 	};
 
+	const handlePayCart = async () => {
+		const allCartId = cartData?.map((item) => {
+			return {
+				id: item.id,
+			};
+		});
+		const body = {
+			status: 'pending',
+			products: allCartId,
+		};
+
+		const response = await API.post('/transaction', body);
+		console.log(response.data.data);
+	};
+
 	// calculate
 	const allQty = cartData?.map((item) => item.qty);
 	const totalQty = allQty?.reduce((a, b) => a + b, 0);
@@ -163,7 +178,7 @@ export const CartOrder = () => {
 					<PrimaryButton
 						className='w-25 d-flex gap-3 justify-content-center align-self-end mt-5'
 						btnName='Pay'
-						// onClick={orderHandler}
+						onClick={() => handlePayCart()}
 					></PrimaryButton>
 				)}
 			</div>
