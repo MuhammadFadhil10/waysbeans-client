@@ -12,9 +12,16 @@ import convertRupiah from 'rupiah-format';
 import { LoginContext } from '../contexts/LoginContext';
 import { UserContext } from '../contexts/UserContext';
 import { useNavigate } from 'react-router-dom';
+import { Login } from '../components/auth/Login';
+import { Register } from '../components/auth/Register';
 
 export const Home = () => {
 	const navigate = useNavigate();
+	const { isLogin } = React.useContext(LoginContext);
+
+	const [showLogin, setShowLogin] = React.useState(false);
+	const [showRegister, setShowRegister] = React.useState(false);
+
 	const { data: products, refetch } = useQuery('productsCache', async () => {
 		try {
 			const response = await API.get('/products');
@@ -72,7 +79,11 @@ export const Home = () => {
 										border: 'none',
 										cursor: 'pointer',
 									}}
-									onClick={() => navigate(`/product/${product.id}`)}
+									onClick={() =>
+										isLogin
+											? navigate(`/product/${product.id}`)
+											: setShowLogin(true)
+									}
 								>
 									<Image
 										src={product.photo}
@@ -93,6 +104,16 @@ export const Home = () => {
 						))}
 					</Row>
 				</div>
+				<Login
+					show={showLogin}
+					setShow={setShowLogin}
+					setShowRegister={setShowRegister}
+				/>
+				<Register
+					show={showRegister}
+					setShow={setShowRegister}
+					setShowLogin={setShowLogin}
+				/>
 			</Container>
 		</>
 	);

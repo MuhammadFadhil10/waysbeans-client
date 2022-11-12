@@ -22,3 +22,6 @@
 .secondary-text-color {
 	color: #974a4a !important;
 }
+*::-webkit-scrollbar {
+	display: none;
+}

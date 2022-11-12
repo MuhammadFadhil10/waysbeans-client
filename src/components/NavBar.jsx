@@ -1,6 +1,13 @@
 import * as React from 'react';
-import { Container, Navbar, Image, Nav, Dropdown } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
+import {
+	Container,
+	Navbar,
+	Image,
+	Nav,
+	Dropdown,
+	Badge,
+} from 'react-bootstrap';
+import { Link, useNavigate } from 'react-router-dom';
 
 import brandLogo from '../assets/icons/logo.svg';
 import { PrimaryButton } from './atoms/PrimaryButton';
@@ -14,13 +21,34 @@ import { UserContext } from '../contexts/UserContext';
 import { useQuery } from 'react-query';
 import { API } from '../config/api';
 
+import profileIcon from '../assets/icons/profile-dropdown.svg';
+import logoutIcon from '../assets/icons/logout-dropdown.svg';
+import productIcon from '../assets/icons/product-dropdown.svg';
+import { CartContext } from '../contexts/CartContext';
+
 export const NavBar = () => {
+	const navigate = useNavigate();
 	const [showRegister, setShowRegister] = React.useState(false);
 	const [showLogin, setShowLogin] = React.useState(false);
+	const [cartLength, setCartLength] = React.useState(0);
 
 	const { isLogin, setIsLogin } = React.useContext(LoginContext);
 
 	const { profile, refetchProfile } = React.useContext(UserContext);
+
+	const logoutHandler = () => {
+		localStorage.removeItem('token');
+		setIsLogin(false);
+		navigate('/');
+	};
+
+	// get cart data
+	const { cartData, refetchCart } = React.useContext(CartContext);
+
+	// React.useEffect(() => {
+	// 	refetchCart();
+	// 	setCartLength(cartData?.length);
+	// }, [cartData]);
 
 	return (
 		<>
@@ -37,23 +65,46 @@ export const NavBar = () => {
 					<Nav className='d-flex gap-3'>
 						{isLogin ? (
 							<>
-								<Link to='/'>
+								<Link to='/carts'>
 									<Image src={cartIcon} alt='cart' width='40px' />
+									{cartData?.length > 0 && (
+										<Badge
+											bg='danger'
+											pill
+											style={{ height: '25px', width: '25px' }}
+											className='d-flex align-items-center justify-content-center top-0 mt-3 fs-6 position-absolute ms-4'
+										>
+											{cartData?.length}
+										</Badge>
+									)}
 								</Link>
-								<Dropdown>
+								<Dropdown drop='start'>
 									<Dropdown.Toggle variant='' id='dropdown-basic'>
 										<Image
 											src={profile?.photo}
-											alt='profile'
-											width='40px'
-											height='40px'
-											className=' rounded-pill'
-											style={{ backgroundColor: 'gray' }}
+											className='rounded-pill'
+											style={{
+												width: '40px',
+												height: '40px',
+												backgroundColor: 'gray',
+											}}
 										/>
 									</Dropdown.Toggle>
 									<Dropdown.Menu>
-										<DropdownItem>
-											<h1>hahaha</h1>
+										<DropdownItem
+											className='d-flex align-items-center'
+											onClick={() => navigate('/profile')}
+										>
+											<Image src={profileIcon} width='30px' />
+											<p>Profile</p>
+										</DropdownItem>
+										<Dropdown.Divider />
+										<DropdownItem
+											className='d-flex align-items-center'
+											onClick={logoutHandler}
+										>
+											<Image src={logoutIcon} width='30px' />
+											<p>Logout</p>
 										</DropdownItem>
 									</Dropdown.Menu>
 								</Dropdown>

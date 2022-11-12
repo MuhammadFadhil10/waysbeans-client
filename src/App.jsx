@@ -1,6 +1,6 @@
 import * as React from 'react';
 import reactLogo from './assets/react.svg';
-import { QueryClientProvider, QueryClient } from 'react-query';
+import { QueryClientProvider, QueryClient, useQuery } from 'react-query';
 import { BrowserRouter, Route, Router, Routes } from 'react-router-dom';
 
 import './App.css';
@@ -10,27 +10,39 @@ import { LoginContext } from './contexts/LoginContext';
 import { UserContext, UserProvider } from './contexts/UserContext';
 import { API, setAuthToken } from './config/api';
 import { ProductDetail } from './pages/ProductDetail';
+import { Profile } from './pages/Profile';
+import { CartProvider } from './contexts/CartContext';
+import { CartOrder } from './pages/CartOrder';
 
 function App() {
 	const [isLogin, setIsLogin] = React.useState(false);
+
 	React.useEffect(() => {
 		if (localStorage.token) {
-			setIsLogin(true);
+			console.log(localStorage.token);
 			setAuthToken(localStorage.token);
+			setIsLogin(true);
+		} else {
+			setIsLogin(false);
 		}
 	}, [localStorage.token]);
+
 	const client = new QueryClient();
 	return (
 		<QueryClientProvider client={client}>
 			<LoginContext.Provider value={{ isLogin, setIsLogin }}>
 				<UserProvider>
-					<BrowserRouter>
-						<NavBar />
-						<Routes>
-							<Route path='/' element={<Home />} />
-							<Route path='/product/:id' element={<ProductDetail />} />
-						</Routes>
-					</BrowserRouter>
+					<CartProvider>
+						<BrowserRouter>
+							<NavBar />
+							<Routes>
+								<Route path='/' element={<Home />} />
+								<Route path='/product/:id' element={<ProductDetail />} />
+								<Route path='/profile' element={<Profile />} />
+								<Route path='/carts' element={<CartOrder />} />
+							</Routes>
+						</BrowserRouter>
+					</CartProvider>
 				</UserProvider>
 			</LoginContext.Provider>
 		</QueryClientProvider>

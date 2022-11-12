@@ -7,6 +7,7 @@ export const PrimaryButton = ({
 	width,
 	outline,
 	isLoading,
+	...rest
 }) => {
 	const style = {
 		backgroundColor: outline ? 'none' : '#613D2B',
@@ -16,7 +17,7 @@ export const PrimaryButton = ({
 		color: outline ? '#613D2B' : '#fff',
 	};
 	return (
-		<Button style={style} variant='none' onClick={onClick}>
+		<Button style={style} variant='none' onClick={onClick} {...rest}>
 			{isLoading ? <Spinner animation='border' /> : btnName}
 		</Button>
 	);

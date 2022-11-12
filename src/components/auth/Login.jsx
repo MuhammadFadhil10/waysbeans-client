@@ -2,6 +2,7 @@ import * as React from 'react';
 import { Alert, Container, Form, Modal } from 'react-bootstrap';
 import { API } from '../../config/api';
 import { LoginContext } from '../../contexts/LoginContext';
+import { UserContext } from '../../contexts/UserContext';
 import { PrimaryButton } from '../atoms/PrimaryButton';
 import { PrimaryInput } from '../atoms/PrimaryInput';
 
@@ -12,6 +13,8 @@ export const Login = ({ show, setShow, setShowRegister }) => {
 	const [loginMessage, setLoginMessage] = React.useState('');
 	const [loginStatus, setLoginStatus] = React.useState('');
 	const [isLoading, setIsLoading] = React.useState(false);
+
+	// const profile = React.useContext(UserContext);
 
 	const [loginData, setLoginData] = React.useState({
 		email: '',
@@ -26,11 +29,13 @@ export const Login = ({ show, setShow, setShowRegister }) => {
 		try {
 			setIsLoading(true);
 			const response = await API.post('/auth/login', loginData);
+			// setProfile(response.data.data.user);
 			setIsLogin(true);
 			setLoginStatus(response.data.status);
 			setIsLoading(false);
 			setLoginMessage('Login success');
 			localStorage.setItem('token', response.data.data.user.token);
+			refetchProfile();
 		} catch (error) {
 			setLoginStatus(error.response.data.status);
 			setIsLoading(false);
