@@ -1,14 +1,14 @@
 import * as React from 'react';
 import { Alert, Container, Form, Modal } from 'react-bootstrap';
 import { API } from '../../config/api';
+import { LoginContext } from '../../contexts/LoginContext';
 import { PrimaryButton } from '../atoms/PrimaryButton';
 import { PrimaryInput } from '../atoms/PrimaryInput';
 
 export const Login = ({ show, setShow, setShowRegister }) => {
 	const handleClose = () => setShow(false);
-	const handleShow = () => setShow(true);
 
-	const [registResponse, setRegistResponse] = React.useState(null);
+	const { isLogin, setIsLogin } = React.useContext(LoginContext);
 	const [loginMessage, setLoginMessage] = React.useState('');
 	const [loginStatus, setLoginStatus] = React.useState('');
 	const [isLoading, setIsLoading] = React.useState(false);
@@ -26,9 +26,11 @@ export const Login = ({ show, setShow, setShowRegister }) => {
 		try {
 			setIsLoading(true);
 			const response = await API.post('/auth/login', loginData);
+			setIsLogin(true);
 			setLoginStatus(response.data.status);
 			setIsLoading(false);
 			setLoginMessage('Login success');
+			localStorage.setItem('token', response.data.data.user.token);
 		} catch (error) {
 			setLoginStatus(error.response.data.status);
 			setIsLoading(false);
@@ -36,6 +38,7 @@ export const Login = ({ show, setShow, setShowRegister }) => {
 		}
 	};
 
+	// clear alert message after seconds
 	React.useEffect(() => {
 		if (loginMessage != '') {
 			setTimeout(() => {
@@ -53,7 +56,6 @@ export const Login = ({ show, setShow, setShowRegister }) => {
 				show={show}
 				onHide={handleClose}
 				className=' d-flex flex-column justify-content-center align-items-center'
-				// style={{ width: '416px' }}
 			>
 				<Container
 					className='d-flex flex-column gap-4 justify-content-center align-items-center p-5 '

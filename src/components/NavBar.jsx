@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Container, Navbar, Image, Nav } from 'react-bootstrap';
+import { Container, Navbar, Image, Nav, Dropdown } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 
 import brandLogo from '../assets/icons/logo.svg';
@@ -7,9 +7,21 @@ import { PrimaryButton } from './atoms/PrimaryButton';
 import { Register } from './auth/Register';
 import { Login } from './auth/Login';
 
+import cartIcon from '../assets/icons/cart-icon.svg';
+import DropdownItem from 'react-bootstrap/esm/DropdownItem';
+import { LoginContext } from '../contexts/LoginContext';
+import { UserContext } from '../contexts/UserContext';
+import { useQuery } from 'react-query';
+import { API } from '../config/api';
+
 export const NavBar = () => {
 	const [showRegister, setShowRegister] = React.useState(false);
 	const [showLogin, setShowLogin] = React.useState(false);
+
+	const { isLogin, setIsLogin } = React.useContext(LoginContext);
+
+	const { profile, refetchProfile } = React.useContext(UserContext);
+
 	return (
 		<>
 			<Navbar
@@ -23,17 +35,44 @@ export const NavBar = () => {
 				<Navbar.Toggle aria-controls='basic-navbar-nav' />
 				<Navbar.Collapse className='justify-content-end' id='basic-navbar-nav'>
 					<Nav className='d-flex gap-3'>
-						<PrimaryButton
-							btnName='Login'
-							outline
-							width='100px'
-							onClick={() => setShowLogin(true)}
-						/>
-						<PrimaryButton
-							btnName='Register'
-							width='100px'
-							onClick={() => setShowRegister(true)}
-						/>
+						{isLogin ? (
+							<>
+								<Link to='/'>
+									<Image src={cartIcon} alt='cart' width='40px' />
+								</Link>
+								<Dropdown>
+									<Dropdown.Toggle variant='' id='dropdown-basic'>
+										<Image
+											src={profile?.photo}
+											alt='profile'
+											width='40px'
+											height='40px'
+											className=' rounded-pill'
+											style={{ backgroundColor: 'gray' }}
+										/>
+									</Dropdown.Toggle>
+									<Dropdown.Menu>
+										<DropdownItem>
+											<h1>hahaha</h1>
+										</DropdownItem>
+									</Dropdown.Menu>
+								</Dropdown>
+							</>
+						) : (
+							<>
+								<PrimaryButton
+									btnName='Login'
+									outline
+									width='100px'
+									onClick={() => setShowLogin(true)}
+								/>
+								<PrimaryButton
+									btnName='Register'
+									width='100px'
+									onClick={() => setShowRegister(true)}
+								/>
+							</>
+						)}
 					</Nav>
 				</Navbar.Collapse>
 			</Navbar>

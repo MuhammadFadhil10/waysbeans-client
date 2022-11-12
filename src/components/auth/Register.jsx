@@ -6,9 +6,7 @@ import { PrimaryInput } from '../atoms/PrimaryInput';
 
 export const Register = ({ show, setShow, setShowLogin }) => {
 	const handleClose = () => setShow(false);
-	const handleShow = () => setShow(true);
 
-	const [registResponse, setRegistResponse] = React.useState(null);
 	const [regisMessage, setRegisMessage] = React.useState('');
 	const [registerStatus, setRegisterStatus] = React.useState('');
 	const [isLoading, setIsLoading] = React.useState(false);
@@ -37,6 +35,7 @@ export const Register = ({ show, setShow, setShowLogin }) => {
 		}
 	};
 
+	// clear alert message after seconds
 	React.useEffect(() => {
 		if (regisMessage != '') {
 			setTimeout(() => {

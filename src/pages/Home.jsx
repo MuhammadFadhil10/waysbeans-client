@@ -9,6 +9,8 @@ import bannerWaves from '../assets/icons/banner-waves.svg';
 import { useQuery } from 'react-query';
 import { API } from '../config/api';
 import convertRupiah from 'rupiah-format';
+import { LoginContext } from '../contexts/LoginContext';
+import { UserContext } from '../contexts/UserContext';
 
 export const Home = () => {
 	const { data: products, refetch } = useQuery('productsCache', async () => {
@@ -19,6 +21,12 @@ export const Home = () => {
 			console.log(error);
 		}
 	});
+
+	// const { userData, setUserData } = React.useContext(UserContext);
+
+	// React.useEffect(() => {
+	// 	console.log(userData);
+	// }, []);
 	return (
 		<>
 			<Container className='p-0' style={{ marginTop: '100px' }}>
@@ -67,11 +75,11 @@ export const Home = () => {
 								>
 									<Image
 										src={product.photo}
-										height='312px'
+										height='212px'
 										style={{ backgroundColor: 'gray' }}
 									/>
 									<Card.Body>
-										<h1 className='fs-3'>{product.name}</h1>
+										<h1 className='fs-4'>{product.name}</h1>
 										<p>{convertRupiah.convert(product.price)}</p>
 										<p>Stock: {product.stock}</p>
 									</Card.Body>
