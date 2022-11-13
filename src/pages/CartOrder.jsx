@@ -9,10 +9,24 @@ import convertRupiah from 'rupiah-format';
 import { API } from '../config/api';
 import cartEmpty from '../assets/icons/empty-cart.svg';
 import { useNavigate } from 'react-router-dom';
+import { useQuery } from 'react-query';
 
 export const CartOrder = () => {
 	const navigate = useNavigate();
 	const { cartData, refetchCart } = React.useContext(CartContext);
+
+	const { data: products, refetch: refetchProduct } = useQuery(
+		'productsCache',
+		async () => {
+			try {
+				const response = await API.get('/products');
+				return response.data.data.products;
+			} catch (error) {
+				console.log(error);
+			}
+		}
+	);
+
 	React.useEffect(() => {
 		//change this to the script source you want to load, for example this is snap.js sandbox env
 		const midtransScriptUrl = import.meta.env.VITE_MIDTRANS_SCRIPT_URL;
@@ -70,13 +84,6 @@ export const CartOrder = () => {
 		const token = response.data.data.token;
 		window.snap.pay(token, {
 			onSuccess: async function (result) {
-				/* You may add your own implementation here */
-				// result.order_id
-				// console.log('midtrans success:', result);
-				// console.log('midtrans orderId:', result.order_id);
-				// console.log('midtrans fraud:', result.fraud_status);
-				// console.log('midtrans status:', result.transaction_status);
-				// alert('dsa');
 				const body = {
 					order_id: result.order_id,
 					fraud_status: result.fraud_status,
@@ -84,6 +91,11 @@ export const CartOrder = () => {
 				};
 
 				const response = await API.post('/transaction-process', body);
+				refetchProduct();
+				const clearCart = await API.delete(
+					`/cart/clear/${cartData[0]?.user?.id}`
+				);
+				refetchCart();
 			},
 			onPending: function (result) {
 				/* You may add your own implementation here */

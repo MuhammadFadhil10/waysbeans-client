@@ -17,17 +17,7 @@ import 'moment-timezone';
 export const Profile = () => {
 	const navigate = useNavigate();
 
-	// const role = localStorage.role;
 	const { profile, refetchProfile } = useContext(UserContext);
-
-	// const { data: myTransaction, refetch: refetchTransaction } = useQuery(
-	// 	'myTransactionCache',
-	// 	async () => {
-	// 		const response = await API.get('/my-transaction');
-	// 		console.log(response.data.data);
-	// 		return response.data.data;
-	// 	}
-	// );
 
 	const { data: transactions, refetch: refetchTransaction } = useQuery(
 		'myTransactionCache',
@@ -50,11 +40,6 @@ export const Profile = () => {
 					<Row className='d-flex justify-content-star'>
 						<Col className='col-5 col-lg-4'>
 							<Image src={profile?.photo} width='100%' />
-							<PrimaryButton
-								btnName='Edit Profile'
-								className='w-100 mt-3 border-0'
-								onClick={() => navigate(`/profile/edit/${profile?.id}`)}
-							/>
 						</Col>
 						<Col>
 							<div>
@@ -102,7 +87,7 @@ export const Profile = () => {
 											className='secondary-text-color'
 											style={{ lineHeight: '10px' }}
 										>
-											<p>Price: {rupiahFormat.convert(item.totalPrice)}</p>
+											{/* <p>Price: {rupiahFormat.convert(item.totalPrice)}</p> */}
 											<p>{item.qty}</p>
 											<p className='font-weight-bold'>
 												<strong>
