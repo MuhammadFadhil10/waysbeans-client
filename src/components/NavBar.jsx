@@ -18,8 +18,6 @@ import cartIcon from '../assets/icons/cart-icon.svg';
 import DropdownItem from 'react-bootstrap/esm/DropdownItem';
 import { LoginContext } from '../contexts/LoginContext';
 import { UserContext } from '../contexts/UserContext';
-import { useQuery } from 'react-query';
-import { API } from '../config/api';
 
 import profileIcon from '../assets/icons/profile-dropdown.svg';
 import logoutIcon from '../assets/icons/logout-dropdown.svg';
@@ -30,7 +28,6 @@ export const NavBar = () => {
 	const navigate = useNavigate();
 	const [showRegister, setShowRegister] = React.useState(false);
 	const [showLogin, setShowLogin] = React.useState(false);
-	const [cartLength, setCartLength] = React.useState(0);
 
 	const { isLogin, setIsLogin } = React.useContext(LoginContext);
 
