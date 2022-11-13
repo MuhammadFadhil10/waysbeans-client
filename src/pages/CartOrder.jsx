@@ -8,12 +8,28 @@ import { CartContext } from '../contexts/CartContext';
 import convertRupiah from 'rupiah-format';
 import { API } from '../config/api';
 import cartEmpty from '../assets/icons/empty-cart.svg';
+import { useNavigate } from 'react-router-dom';
 
 export const CartOrder = () => {
+	const navigate = useNavigate();
 	const { cartData, refetchCart } = React.useContext(CartContext);
 	React.useEffect(() => {
-		console.log(cartData);
-	}, [cartData]);
+		//change this to the script source you want to load, for example this is snap.js sandbox env
+		const midtransScriptUrl = import.meta.env.VITE_MIDTRANS_SCRIPT_URL;
+		//change this according to your client-key
+		const myMidtransClientKey = import.meta.env.VITE_MY_MIDTRANS_CLIENT_KEY;
+
+		let scriptTag = document.createElement('script');
+		scriptTag.src = midtransScriptUrl;
+		// optional if you want to set script attribute
+		// for example snap.js have data-client-key attribute
+		scriptTag.setAttribute('data-client-key', myMidtransClientKey);
+
+		document.body.appendChild(scriptTag);
+		return () => {
+			document.body.removeChild(scriptTag);
+		};
+	}, []);
 
 	const handleQtyCart = async (currentQty, cartId, type) => {
 		if (type === 'add') {
@@ -36,18 +52,53 @@ export const CartOrder = () => {
 	};
 
 	const handlePayCart = async () => {
-		const allCartId = cartData?.map((item) => {
-			return {
-				id: item.id,
-			};
+		const allProductsCart = cartData?.map((item) => {
+			return item.products;
 		});
+		const totalPrice = subTotal + 10000 * cartData?.length;
+		console.log(allProductsCart);
+		console.log(totalPrice);
 		const body = {
 			status: 'pending',
-			products: allCartId,
+			products: allProductsCart,
+			totalPrice: subTotal + 10000 * cartData?.length,
 		};
 
 		const response = await API.post('/transaction', body);
-		console.log(response.data.data);
+		console.log(response.data);
+		// midtrans
+		const token = response.data.data.token;
+		window.snap.pay(token, {
+			onSuccess: async function (result) {
+				/* You may add your own implementation here */
+				// result.order_id
+				// console.log('midtrans success:', result);
+				// console.log('midtrans orderId:', result.order_id);
+				// console.log('midtrans fraud:', result.fraud_status);
+				// console.log('midtrans status:', result.transaction_status);
+				// alert('dsa');
+				const body = {
+					order_id: result.order_id,
+					fraud_status: result.fraud_status,
+					transaction_status: result.transaction_status,
+				};
+
+				const response = await API.post('/transaction-process', body);
+			},
+			onPending: function (result) {
+				/* You may add your own implementation here */
+				console.log(result);
+				navigate('/profile');
+			},
+			onError: function (result) {
+				/* You may add your own implementation here */
+				console.log(result);
+			},
+			onClose: function () {
+				/* You may add your own implementation here */
+				alert('you closed the popup without finishing the payment');
+			},
+		});
 	};
 
 	// calculate
@@ -165,7 +216,11 @@ export const CartOrder = () => {
 												<h6>Total</h6>
 											</Col>
 											<Col className='col-4 text-end ff-avenir'>
-												<h6>{convertRupiah.convert(subTotal + 10000)}</h6>
+												<h6>
+													{convertRupiah.convert(
+														subTotal + 10000 * cartData?.length
+													)}
+												</h6>
 											</Col>
 										</Row>
 									</Col>

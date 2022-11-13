@@ -17,10 +17,11 @@ import { NotFound } from './pages/error/NotFound';
 
 function App() {
 	const [isLogin, setIsLogin] = React.useState(false);
+	const midtransClientKey = import.meta.env.VITE_MY_MIDTRANS_CLIENT_KEY;
 
 	React.useEffect(() => {
 		if (localStorage.token) {
-			console.log(localStorage.token);
+			console.log('midtrans:', midtransClientKey);
 			setAuthToken(localStorage.token);
 			setIsLogin(true);
 		} else {

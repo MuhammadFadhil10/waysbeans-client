@@ -7,6 +7,13 @@ import { useQuery } from 'react-query';
 import { API } from '../config/api';
 import { UserContext } from '../contexts/UserContext';
 
+import waysBeanLogo from '../assets/icons/logo.svg';
+import transactionBarcode from '../assets/icons/transaction-barcode.svg';
+
+import rupiahFormat from 'rupiah-format';
+import Moment, * as moment from 'react-moment';
+import 'moment-timezone';
+
 export const Profile = () => {
 	const navigate = useNavigate();
 
@@ -21,6 +28,15 @@ export const Profile = () => {
 	// 		return response.data.data;
 	// 	}
 	// );
+
+	const { data: transactions, refetch: refetchTransaction } = useQuery(
+		'myTransactionCache',
+		async () => {
+			const response = await API.get('/transactions');
+			console.log(response.data.data);
+			return response.data.data;
+		}
+	);
 
 	useEffect(() => {
 		refetchProfile();
@@ -55,31 +71,58 @@ export const Profile = () => {
 				<Col className='col-12 col-lg-6'>
 					<p className='fs-3 mb-5'>My Transaction</p>
 					<div style={{ maxHeight: '300px', overflow: 'scroll' }}>
-						{/* {myTransaction?.map((transaction) => {
-							return (
-						<Card
-							className='shadow d-flex flex-row justify-content-between p-2 mb-3'
-							style={{ borderBox: 'box-sizing' }}
-						>
-							<div className=' d-flex flex-column justify-content-between '>
-								<div style={{ lineHeight: '10px' }}>
-									<p>{transaction.seller.fullName}</p>
+						{transactions?.map((item) => (
+							<Card
+								className='shadow d-flex flex-row justify-content-between p-2 mb-3'
+								style={{ borderBox: 'box-sizing' }}
+							>
+								<div className=' d-flex gap-3 '>
+									<div>
+										<Image
+											src={item.products[0].photo}
+											style={{ width: '120px', height: '100%' }}
+											className='bg-secondary'
+										/>
+									</div>
+									<div className='d-flex flex-column gap-3    '>
+										<div style={{ lineHeight: '10px' }}>
+											<h1 className='main-text-color fs-3'>
+												{item.products[0].name}
+											</h1>
+											<p>
+												<Moment fromNow>
+													{item.createdAT}
+													{/* 1976-04-19T12:59-0500 */}
+												</Moment>
+												{/* {' '}
+												<Moment fromNow ago>{item.createdAT}</Moment>{' '} */}
+											</p>
+										</div>
+										<div
+											className='secondary-text-color'
+											style={{ lineHeight: '10px' }}
+										>
+											<p>Price: {rupiahFormat.convert(item.totalPrice)}</p>
+											<p>{item.qty}</p>
+											<p className='font-weight-bold'>
+												<strong>
+													Sub Total: {rupiahFormat.convert(item.totalPrice)}
+												</strong>
+											</p>
+										</div>
+									</div>
 								</div>
-								<p className='text-danger'>{transaction.totalPrice}</p>
-							</div>
-							<div className='d-flex flex-column align-items-center gap-3 w-25'>
-								<Col>
-									<Image src={logo} />
-								</Col>
-								<Col className='w-100 d-flex align-items-center justify-content-center'>
-									<Alert variant='success' className='p-1 w-100 text-center'>
-										{transaction.status}
-									</Alert>
-								</Col>
-							</div>
-						</Card>
-						 );
-						})}  */}
+								<div className='d-flex flex-column align-items-center gap-3 w-25'>
+									<Image src={waysBeanLogo} width='100px' />
+									<Image src={transactionBarcode} width='50px' />
+									<div className='w-100 d-flex align-items-center justify-content-center'>
+										<Alert variant='success' className='p-1 w-100 text-center'>
+											{item.status}
+										</Alert>
+									</div>
+								</div>
+							</Card>
+						))}
 					</div>
 				</Col>
 			</Row>
