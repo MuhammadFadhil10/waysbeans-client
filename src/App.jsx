@@ -14,6 +14,10 @@ import { Profile } from './pages/Profile';
 import { CartProvider } from './contexts/CartContext';
 import { CartOrder } from './pages/CartOrder';
 import { NotFound } from './pages/error/NotFound';
+import { AdminTransaction } from './pages/admin/AdminTransaction';
+import { AddProduct } from './pages/admin/AddProduct';
+import { ProductList } from './pages/admin/ProductList';
+import { UpdateProduct } from './pages/admin/UpdateProduct';
 
 function App() {
 	const [isLogin, setIsLogin] = React.useState(false);
@@ -42,6 +46,15 @@ function App() {
 								<Route path='/product/:id' element={<ProductDetail />} />
 								<Route path='/profile' element={<Profile />} />
 								<Route path='/carts' element={<CartOrder />} />
+								{/* admin */}
+								<Route
+									path='/admin/transactions'
+									element={<AdminTransaction />}
+								/>
+								<Route path='/admin/add-product' element={<AddProduct />} />
+								<Route path='/admin/update-product/:id' element={<UpdateProduct />} />
+								<Route path='/admin/products' element={<ProductList />} />
+								{/* page not found */}
 								<Route path='*' element={<NotFound />} />
 							</Routes>
 						</BrowserRouter>

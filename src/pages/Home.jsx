@@ -91,7 +91,9 @@ export const Home = () => {
 										style={{ backgroundColor: 'gray', objectFit: 'fill' }}
 									/>
 									<Card.Body>
-										<h1 className='fs-4 main-text-color'>{product.name}</h1>
+										<h1 className='fs-4 main-text-color'>
+											{product.productName}
+										</h1>
 										<p className='secondary-text-color'>
 											{convertRupiah.convert(product.price)}
 										</p>

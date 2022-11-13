@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { Alert, Container, Form, Modal } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
 import { API } from '../../config/api';
 import { LoginContext } from '../../contexts/LoginContext';
 import { UserContext } from '../../contexts/UserContext';
@@ -7,6 +8,7 @@ import { PrimaryButton } from '../atoms/PrimaryButton';
 import { PrimaryInput } from '../atoms/PrimaryInput';
 
 export const Login = ({ show, setShow, setShowRegister }) => {
+	const navigate = useNavigate();
 	const handleClose = () => setShow(false);
 
 	const { isLogin, setIsLogin } = React.useContext(LoginContext);
@@ -35,7 +37,10 @@ export const Login = ({ show, setShow, setShowRegister }) => {
 			setIsLoading(false);
 			setLoginMessage('Login success');
 			localStorage.setItem('token', response.data.data.user.token);
-			refetchProfile();
+			if (response.data.data.user.role === 'admin') {
+				navigate('/admin/transactions');
+				setShow(false);
+			}
 		} catch (error) {
 			setLoginStatus(error.response.data.status);
 			setIsLoading(false);

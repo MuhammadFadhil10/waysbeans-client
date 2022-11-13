@@ -5,6 +5,7 @@ export const PrimaryInput = ({ label, ...rest }) => {
 		<Form.Group className='mb-3'>
 			<FloatingLabel label={label}>
 				<Form.Control
+					autoComplete='off'
 					style={{ backgroundColor: '#613D2B40', border: '2px solid #613D2B' }}
 					{...rest}
 				></Form.Control>

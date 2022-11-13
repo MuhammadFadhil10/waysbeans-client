@@ -56,7 +56,7 @@ export const ProductDetail = () => {
 				</Col>
 				<Col className='col-11 col-lg-6'>
 					<Col>
-						<h1 className='main-text-color'>{product?.name}</h1>
+						<h1 className='main-text-color'>{product?.productName}</h1>
 						<p className='secondary-text-color'>Stock: {product?.stock}</p>
 					</Col>
 					<Col

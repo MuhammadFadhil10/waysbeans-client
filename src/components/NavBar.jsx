@@ -45,10 +45,9 @@ export const NavBar = () => {
 	// get cart data
 	const { cartData, refetchCart } = React.useContext(CartContext);
 
-	// React.useEffect(() => {
-	// 	refetchCart();
-	// 	setCartLength(cartData?.length);
-	// }, [cartData]);
+	React.useEffect(() => {
+		console.log(profile);
+	}, [profile]);
 
 	return (
 		<>
@@ -65,19 +64,21 @@ export const NavBar = () => {
 					<Nav className='d-flex gap-3'>
 						{isLogin ? (
 							<>
-								<Link to='/carts'>
-									<Image src={cartIcon} alt='cart' width='40px' />
-									{cartData?.length > 0 && (
-										<Badge
-											bg='danger'
-											pill
-											style={{ height: '25px', width: '25px' }}
-											className='d-flex align-items-center justify-content-center top-0 mt-3 fs-6 position-absolute ms-4'
-										>
-											{cartData?.length}
-										</Badge>
-									)}
-								</Link>
+								{profile?.role == 'user' && (
+									<Link to='/carts'>
+										<Image src={cartIcon} alt='cart' width='40px' />
+										{cartData?.length > 0 && (
+											<Badge
+												bg='danger'
+												pill
+												style={{ height: '25px', width: '25px' }}
+												className='d-flex align-items-center justify-content-center top-0 mt-3 fs-6 position-absolute ms-4'
+											>
+												{cartData?.length}
+											</Badge>
+										)}
+									</Link>
+								)}
 								<Dropdown drop='start'>
 									<Dropdown.Toggle variant='' id='dropdown-basic'>
 										<Image
@@ -91,13 +92,33 @@ export const NavBar = () => {
 										/>
 									</Dropdown.Toggle>
 									<Dropdown.Menu>
-										<DropdownItem
-											className='d-flex align-items-center'
-											onClick={() => navigate('/profile')}
-										>
-											<Image src={profileIcon} width='30px' />
-											<p>Profile</p>
-										</DropdownItem>
+										{profile?.role == 'user' && (
+											<DropdownItem
+												className='d-flex align-items-center'
+												onClick={() => navigate('/profile')}
+											>
+												<Image src={profileIcon} width='30px' />
+												<p>Profile</p>
+											</DropdownItem>
+										)}
+										{profile?.role == 'admin' && (
+											<>
+												<DropdownItem
+													className='d-flex align-items-center'
+													onClick={() => navigate('/admin/add-product')}
+												>
+													<Image src={productIcon} width='30px' />
+													<p>Add Product</p>
+												</DropdownItem>
+												<DropdownItem
+													className='d-flex align-items-center'
+													onClick={() => navigate('/admin/products')}
+												>
+													<Image src={productIcon} width='30px' />
+													<p>List Product</p>
+												</DropdownItem>
+											</>
+										)}
 										<Dropdown.Divider />
 										<DropdownItem
 											className='d-flex align-items-center'
