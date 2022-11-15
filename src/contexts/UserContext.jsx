@@ -8,7 +8,6 @@ export const UserProvider = ({ children, value }) => {
 	const { data: profile, refetch: refetchProfile } = useQuery(
 		'profileCache',
 		async () => {
-			console.log('fetching...');
 			const response = await API.get('/profile');
 			return response.data.data;
 		}

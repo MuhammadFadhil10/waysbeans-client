@@ -6,6 +6,7 @@ import {
 	Image,
 	Alert,
 	CloseButton,
+	Spinner,
 } from 'react-bootstrap';
 import { useQuery } from 'react-query';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -15,23 +16,30 @@ import { API } from '../../config/api';
 export const ProductList = () => {
 	const navigate = useNavigate();
 	const location = useLocation();
+	const [isLoading, setIsLoading] = React.useState(false);
+
 	const { data: products, refetch: refetchProducts } = useQuery(
 		'productsCache',
 		async () => {
 			const response = await API.get('/products');
-			console.log(response.data.data.products);
 			return response.data.data.products;
 		}
 	);
 
-	const updateHandler = async (productId) => {
+	const deleteHandler = async (productId) => {
 		try {
-			await API.delete(`/product/${productId}`);
+			setIsLoading(true);
+			const response = await API.delete(`/product/${productId}`);
+			setIsLoading(false);
 			refetchProducts();
 		} catch (error) {
 			console.log(error);
 		}
 	};
+
+	React.useEffect(() => {
+		refetchProducts();
+	}, [products]);
 
 	return (
 		<Container className='d-flex flex-column'>
@@ -85,9 +93,9 @@ export const ProductList = () => {
 									</Button>
 									<Button
 										variant='outline-danger'
-										onClick={() => updateHandler(item.id)}
+										onClick={() => deleteHandler(item.id)}
 									>
-										Delete
+										{isLoading ? <Spinner animation='border' /> : 'Delete'}
 									</Button>
 								</td>
 							</tr>

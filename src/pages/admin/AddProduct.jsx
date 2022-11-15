@@ -18,6 +18,8 @@ export const AddProduct = () => {
 	const navigate = useNavigate();
 	const formData = new FormData();
 
+	const [isLoading, setIsLoading] = React.useState(false);
+
 	const [thumbnail, setThumbnail] = React.useState(null);
 
 	const [formValue, setFormValue] = React.useState({
@@ -45,7 +47,9 @@ export const AddProduct = () => {
 
 	const handleSubmit = async () => {
 		try {
+			setIsLoading(true);
 			const response = await API.post('/product/create', formData);
+			setIsLoading(false);
 			navigate('/admin/products', {
 				state: { successMessage: 'Success Add Product' },
 			});
@@ -127,6 +131,7 @@ export const AddProduct = () => {
 						width='260px'
 						className='align-self-center'
 						onClick={handleSubmit}
+						isLoading={isLoading}
 					/>
 				</Col>
 				<Col

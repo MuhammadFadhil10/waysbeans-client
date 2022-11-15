@@ -43,7 +43,7 @@ export const NavBar = () => {
 	const { cartData, refetchCart } = React.useContext(CartContext);
 
 	React.useEffect(() => {
-		console.log(profile);
+		refetchProfile();
 	}, [profile]);
 
 	return (

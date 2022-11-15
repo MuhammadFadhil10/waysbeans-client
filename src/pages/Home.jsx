@@ -81,6 +81,7 @@ export const Home = () => {
 									backgroundColor: '#F6E6DA',
 									border: 'none',
 									cursor: 'pointer',
+									height: '400px'
 								}}
 								onClick={() =>
 									isLogin
@@ -90,7 +91,7 @@ export const Home = () => {
 							>
 								<Image
 									src={product.photo}
-									height='212px'
+									height='65%'
 									style={{ backgroundColor: 'gray', objectFit: 'fill' }}
 								/>
 								<Card.Body>
