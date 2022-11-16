@@ -28,6 +28,7 @@ export const NavBar = () => {
 	const navigate = useNavigate();
 	const [showRegister, setShowRegister] = React.useState(false);
 	const [showLogin, setShowLogin] = React.useState(false);
+	const [showDropdown, setShowDropdown] = React.useState(false);
 
 	const { isLogin, setIsLogin } = React.useContext(LoginContext);
 
@@ -77,8 +78,8 @@ export const NavBar = () => {
 										)}
 									</Link>
 								)}
-								<Dropdown drop='start'>
-									<Dropdown.Toggle variant='' id='dropdown-basic'>
+								<div drop='start'>
+									<div onClick={() => setShowDropdown(!showDropdown)}>
 										<Image
 											src={profile?.photo}
 											className='rounded-pill'
@@ -86,47 +87,67 @@ export const NavBar = () => {
 												width: '40px',
 												height: '40px',
 												backgroundColor: 'gray',
+												cursor: 'pointer',
 											}}
 										/>
-									</Dropdown.Toggle>
-									<Dropdown.Menu>
-										{profile?.role === 'user' && (
-											<DropdownItem
-												className='d-flex align-items-center'
-												onClick={() => navigate('/profile')}
-											>
-												<Image src={profileIcon} width='30px' />
-												<p>Profile</p>
-											</DropdownItem>
-										)}
-										{profile?.role === 'admin' && (
-											<>
-												<DropdownItem
-													className='d-flex align-items-center'
-													onClick={() => navigate('/admin/add-product')}
-												>
-													<Image src={productIcon} width='30px' />
-													<p>Add Product</p>
-												</DropdownItem>
-												<DropdownItem
-													className='d-flex align-items-center'
-													onClick={() => navigate('/admin/products')}
-												>
-													<Image src={productIcon} width='30px' />
-													<p>List Product</p>
-												</DropdownItem>
-											</>
-										)}
-										<Dropdown.Divider />
-										<DropdownItem
-											className='d-flex align-items-center'
-											onClick={logoutHandler}
+									</div>
+									{showDropdown && (
+										<div
+											className='position-absolute bg-danger rounded p-2'
+											style={{ right: '50px', width: '150px' }}
 										>
-											<Image src={logoutIcon} width='30px' />
-											<p>Logout</p>
-										</DropdownItem>
-									</Dropdown.Menu>
-								</Dropdown>
+											{profile?.role === 'user' && (
+												<div
+													className='d-flex align-items-center'
+													onClick={() => {
+														navigate('/profile');
+														setShowDropdown(!showDropdown);
+													}}
+												>
+													<Image src={profileIcon} width='30px' />
+													<p>Profile</p>
+												</div>
+											)}
+											{profile?.role === 'admin' && (
+												<>
+													<div
+														className='d-flex align-items-center gap-2'
+														style={{ cursor: 'pointer' }}
+														onClick={() => {
+															navigate('/admin/add-product');
+															setShowDropdown(!showDropdown);
+														}}
+													>
+														<Image src={productIcon} width='30px' />
+														<p>Add Product</p>
+													</div>
+													<div
+														className='d-flex align-items-center gap-2'
+														style={{ cursor: 'pointer' }}
+														onClick={() => {
+															navigate('/admin/products');
+															setShowDropdown(!showDropdown);
+														}}
+													>
+														<Image src={productIcon} width='30px' />
+														<p>List Product</p>
+													</div>
+												</>
+											)}
+											<div
+												className='d-flex align-items-center gap-2'
+												style={{ cursor: 'pointer' }}
+												onClick={() => {
+													logoutHandler();
+													setShowDropdown(!showDropdown);
+												}}
+											>
+												<Image src={logoutIcon} width='30px' />
+												<p>Logout</p>
+											</div>
+										</div>
+									)}
+								</div>
 							</>
 						) : (
 							<>
