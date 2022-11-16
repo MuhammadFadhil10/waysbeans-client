@@ -49,6 +49,7 @@ export const AddProduct = () => {
 		try {
 			setIsLoading(true);
 			const response = await API.post('/product/create', formData);
+			console.log(response);
 			setIsLoading(false);
 			navigate('/admin/products', {
 				state: { successMessage: 'Success Add Product' },

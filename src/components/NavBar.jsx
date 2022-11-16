@@ -36,6 +36,7 @@ export const NavBar = () => {
 	const logoutHandler = () => {
 		localStorage.removeItem('token');
 		setIsLogin(false);
+		setProfile(null);
 		navigate('/');
 	};
 
@@ -61,7 +62,7 @@ export const NavBar = () => {
 					<Nav className='d-flex gap-3'>
 						{isLogin ? (
 							<>
-								{profile?.role == 'user' && (
+								{profile?.role === 'user' && (
 									<Link to='/carts'>
 										<Image src={cartIcon} alt='cart' width='40px' />
 										{cartData?.length > 0 && (
@@ -89,7 +90,7 @@ export const NavBar = () => {
 										/>
 									</Dropdown.Toggle>
 									<Dropdown.Menu>
-										{profile?.role == 'user' && (
+										{profile?.role === 'user' && (
 											<DropdownItem
 												className='d-flex align-items-center'
 												onClick={() => navigate('/profile')}
@@ -98,7 +99,7 @@ export const NavBar = () => {
 												<p>Profile</p>
 											</DropdownItem>
 										)}
-										{profile?.role == 'admin' && (
+										{profile?.role === 'admin' && (
 											<>
 												<DropdownItem
 													className='d-flex align-items-center'

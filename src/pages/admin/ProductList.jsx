@@ -17,6 +17,7 @@ export const ProductList = () => {
 	const navigate = useNavigate();
 	const location = useLocation();
 	const [isLoading, setIsLoading] = React.useState(false);
+	const [showAlert, setShowAlert] = React.useState(false);
 
 	const { data: products, refetch: refetchProducts } = useQuery(
 		'productsCache',
@@ -41,12 +42,19 @@ export const ProductList = () => {
 		refetchProducts();
 	}, [products]);
 
+	React.useEffect(() => {
+		setShowAlert(true);
+		setTimeout(() => {
+			setShowAlert(false);
+		}, 3500);
+	}, [location.state]);
+
 	return (
 		<Container className='d-flex flex-column'>
-			{location.state && (
+			{showAlert && location?.state && (
 				<Alert variant='light shadow align-self-center w-50 d-flex flex-row align-items-center justify-content-center'>
 					<p className='fw-bold text-center' style={{ color: '#469F74' }}>
-						{location.state.successMessage}
+						{location?.state?.successMessage}
 					</p>
 				</Alert>
 			)}
@@ -67,7 +75,7 @@ export const ProductList = () => {
 					</thead>
 					<tbody>
 						{products?.map((item, index) => (
-							<tr>
+							<tr style={{ height: '100px' }}>
 								<td>{index + 1}</td>
 								<td>
 									<Image
@@ -83,19 +91,24 @@ export const ProductList = () => {
 									{rupiahFormat.convert(item.price)}
 								</td>
 								<td className='text-center'>{item.description}</td>
-								<td className='d-flex gap-2 justify-content-end'>
+								<td
+									className='d-flex gap-2 justify-content-end '
+									style={{ height: '100px' }}
+								>
 									<Button
 										variant='success'
-										style={{ width: '100px' }}
+										style={{ width: '100px', height: '40px' }}
 										onClick={() => navigate(`/admin/update-product/${item.id}`)}
 									>
 										Update
 									</Button>
 									<Button
 										variant='outline-danger'
+										style={{ height: '40px' }}
 										onClick={() => deleteHandler(item.id)}
 									>
-										{isLoading ? <Spinner animation='border' /> : 'Delete'}
+										Delete
+										{/* {isLoading ? <Spinner animation='border' /> : 'Delete'} */}
 									</Button>
 								</td>
 							</tr>

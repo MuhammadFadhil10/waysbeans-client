@@ -10,10 +10,12 @@ import { API } from '../config/api';
 import cartEmpty from '../assets/icons/empty-cart.svg';
 import { useNavigate } from 'react-router-dom';
 import { useQuery } from 'react-query';
+import { UserContext } from '../contexts/UserContext';
 
 export const CartOrder = () => {
 	const navigate = useNavigate();
 	const { cartData, refetchCart } = React.useContext(CartContext);
+	const { profile, refetchProfile } = React.useContext(UserContext);
 
 	const { data: products, refetch: refetchProduct } = useQuery(
 		'productsCache',
@@ -92,10 +94,12 @@ export const CartOrder = () => {
 
 				const response = await API.post('/transaction-process', body);
 				refetchProduct();
+
 				const clearCart = await API.delete(
 					`/cart/clear/${cartData[0]?.user?.id}`
 				);
 				refetchCart();
+				refetchProfile();
 			},
 			onPending: function (result) {
 				/* You may add your own implementation here */

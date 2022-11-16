@@ -33,8 +33,6 @@ export const Home = () => {
 		}
 	});
 
-	
-
 	return (
 		<Container className='p-0'>
 			<div
@@ -81,7 +79,7 @@ export const Home = () => {
 									backgroundColor: '#F6E6DA',
 									border: 'none',
 									cursor: 'pointer',
-									height: '400px'
+									height: '400px',
 								}}
 								onClick={() =>
 									isLogin

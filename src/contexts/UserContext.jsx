@@ -5,16 +5,14 @@ import { API } from '../config/api';
 export const UserContext = React.createContext();
 
 export const UserProvider = ({ children, value }) => {
-	const { data: profile, refetch: refetchProfile } = useQuery(
-		'profileCache',
-		async () => {
-			const response = await API.get('/profile');
-			return response.data.data;
-		}
-	);
+	const [profile, setProfile] = React.useState(null);
+	const refetchProfile = async () => {
+		const response = await API.get('/profile');
+		setProfile(response.data.data);
+	};
 
 	return (
-		<UserContext.Provider value={{ profile, refetchProfile }}>
+		<UserContext.Provider value={{ profile, refetchProfile, setProfile }}>
 			{children}
 		</UserContext.Provider>
 	);
