@@ -31,12 +31,12 @@ function AuthRouter() {
 }
 
 function AdminRouter() {
-	const { profile, refetchProfile } = React.useContext(UserContext);
+	const { profile, setProfile } = React.useContext(UserContext);
 	return profile?.role == 'admin' ? <Outlet /> : <Navigate to='/' />;
 }
 
 function UserRouter() {
-	const { profile, refetchProfile } = React.useContext(UserContext);
+	const { profile, setProfile } = React.useContext(UserContext);
 	return profile?.role == 'user' ? (
 		<Outlet />
 	) : (
@@ -46,10 +46,18 @@ function UserRouter() {
 
 function App() {
 	const [isLogin, setIsLogin] = React.useState(false);
+	const [profile, setProfile] = React.useState(null);
+
+	const refetchProfile = async () => {
+		const response = await API.get('/profile');
+		setProfile(response.data.data);
+		console.log('user:', response.data.data);
+	};
 
 	React.useEffect(() => {
 		if (localStorage.token) {
 			setAuthToken(localStorage.token);
+			refetchProfile();
 			setIsLogin(true);
 		} else {
 			setIsLogin(false);
@@ -60,7 +68,7 @@ function App() {
 	return (
 		<QueryClientProvider client={client}>
 			<LoginContext.Provider value={{ isLogin, setIsLogin }}>
-				<UserProvider>
+				<UserProvider value={{ profile, setProfile }}>
 					<CartProvider>
 						<BrowserRouter>
 							<NavBar />

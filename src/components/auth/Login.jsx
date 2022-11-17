@@ -12,7 +12,7 @@ export const Login = ({ show, setShow, setShowRegister }) => {
 	const handleClose = () => setShow(false);
 
 	const { isLogin, setIsLogin } = React.useContext(LoginContext);
-	const { profile, refetchProfile } = React.useContext(UserContext);
+	const { profile, setProfile } = React.useContext(UserContext);
 	const [loginMessage, setLoginMessage] = React.useState('');
 	const [loginStatus, setLoginStatus] = React.useState('');
 	const [isLoading, setIsLoading] = React.useState(false);
@@ -32,9 +32,9 @@ export const Login = ({ show, setShow, setShowRegister }) => {
 		try {
 			setIsLoading(true);
 			const response = await API.post('/auth/login', loginData);
-			// setProfile(response.data.data.user);
+			console.log('logindata:', response.data.data);
+			setProfile(response.data.data.user);
 			setIsLogin(true);
-			refetchProfile();
 			setLoginStatus(response.data.status);
 			setIsLoading(false);
 			setLoginMessage('Login success');
@@ -44,9 +44,9 @@ export const Login = ({ show, setShow, setShowRegister }) => {
 				setShow(false);
 			}
 		} catch (error) {
-			setLoginStatus(error.response.data.status);
+			setLoginStatus(error?.response?.data?.status);
 			setIsLoading(false);
-			setLoginMessage(error.response.data.message);
+			setLoginMessage(error?.response?.data?.message);
 		}
 	};
 

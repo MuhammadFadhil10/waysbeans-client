@@ -10,14 +10,29 @@ import { CartContext } from '../contexts/CartContext';
 export const ProductDetail = () => {
 	const { id } = useParams();
 	const navigate = useNavigate();
+	const { cartLength, setCartLength } = React.useContext(CartContext);
 
-	const { cartData, refetchCart } = React.useContext(CartContext);
+	// get cart data
+	const { data: cartData, refetch: refetchCart } = useQuery(
+		'cartCache',
+		async () => {
+			try {
+				const response = await API.get('/cart');
+				setCartLength(response.data.data.length);
+				console.log('my cart:', response.data.data);
+				return response.data.data;
+			} catch (error) {
+				return [];
+			}
+		}
+	);
 
 	const { data: product, refetch: refetchProduct } = useQuery(
 		'productCahche',
 		async () => {
 			try {
 				const response = await API.get(`/product/${id}`);
+
 				return response.data.data;
 			} catch (error) {
 				console.log(error.response.status);
@@ -34,6 +49,7 @@ export const ProductDetail = () => {
 		try {
 			const response = await API.post('/cart', body);
 			refetchCart();
+			setCartLength(response.data.data.length);
 			console.log('cart success', response.data.data);
 		} catch (error) {
 			console.log('cart error', error);

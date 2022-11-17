@@ -14,8 +14,9 @@ import { UserContext } from '../contexts/UserContext';
 
 export const CartOrder = () => {
 	const navigate = useNavigate();
-	const { cartData, refetchCart } = React.useContext(CartContext);
-	const { profile, refetchProfile } = React.useContext(UserContext);
+
+	const { profile, setProfile } = React.useContext(UserContext);
+	const { cartLength, setCartLength } = React.useContext(CartContext);
 
 	const { data: products, refetch: refetchProduct } = useQuery(
 		'productsCache',
@@ -28,6 +29,25 @@ export const CartOrder = () => {
 			}
 		}
 	);
+
+	// get cart data
+	const { data: cartData, refetch: refetchCart } = useQuery(
+		'cartCache',
+		async () => {
+			try {
+				const response = await API.get('/cart');
+				setCartLength(response.data.data.length);
+				return response.data.data;
+			} catch (error) {
+				console.log(error);
+				return [];
+			}
+		}
+	);
+
+	React.useEffect(() => {
+		refetchCart();
+	}, [cartData]);
 
 	React.useEffect(() => {
 		//change this to the script source you want to load, for example this is snap.js sandbox env

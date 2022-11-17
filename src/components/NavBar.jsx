@@ -23,16 +23,19 @@ import profileIcon from '../assets/icons/profile-dropdown.svg';
 import logoutIcon from '../assets/icons/logout-dropdown.svg';
 import productIcon from '../assets/icons/product-dropdown.svg';
 import { CartContext } from '../contexts/CartContext';
+import { API } from '../config/api';
+import { useQuery } from 'react-query';
 
 export const NavBar = () => {
 	const navigate = useNavigate();
+	const { cartLength, setCartLength } = React.useContext(CartContext);
 	const [showRegister, setShowRegister] = React.useState(false);
 	const [showLogin, setShowLogin] = React.useState(false);
 	const [showDropdown, setShowDropdown] = React.useState(false);
 
 	const { isLogin, setIsLogin } = React.useContext(LoginContext);
 
-	const { profile, refetchProfile } = React.useContext(UserContext);
+	const { profile, setProfile } = React.useContext(UserContext);
 
 	const logoutHandler = () => {
 		localStorage.removeItem('token');
@@ -42,11 +45,24 @@ export const NavBar = () => {
 	};
 
 	// get cart data
-	const { cartData, refetchCart } = React.useContext(CartContext);
+	const { data: cartData, refetch: refetchCart } = useQuery(
+		'cartCache',
+		async () => {
+			try {
+				const response = await API.get('/cart');
+				setCartLength(response.data.data.length);
+
+				console.log('my cart:', response.data.data);
+				return response.data.data;
+			} catch (error) {
+				return [];
+			}
+		}
+	);
 
 	React.useEffect(() => {
-		refetchProfile();
-	}, [profile]);
+		refetchCart();
+	}, [cartData]);
 
 	return (
 		<>
@@ -66,14 +82,14 @@ export const NavBar = () => {
 								{profile?.role === 'user' && (
 									<Link to='/carts'>
 										<Image src={cartIcon} alt='cart' width='40px' />
-										{cartData?.length > 0 && (
+										{cartLength > 0 && (
 											<Badge
 												bg='danger'
 												pill
 												style={{ height: '25px', width: '25px' }}
 												className='d-flex align-items-center justify-content-center top-0 mt-3 fs-6 position-absolute ms-4'
 											>
-												{cartData?.length}
+												{cartLength}
 											</Badge>
 										)}
 									</Link>

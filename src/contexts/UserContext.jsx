@@ -6,14 +6,6 @@ export const UserContext = React.createContext();
 
 export const UserProvider = ({ children, value }) => {
 	const [profile, setProfile] = React.useState(null);
-	const refetchProfile = async () => {
-		const response = await API.get('/profile');
-		setProfile(response.data.data);
-	};
 
-	return (
-		<UserContext.Provider value={{ profile, refetchProfile, setProfile }}>
-			{children}
-		</UserContext.Provider>
-	);
+	return <UserContext.Provider value={value}>{children}</UserContext.Provider>;
 };
