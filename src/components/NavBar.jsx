@@ -64,6 +64,13 @@ export const NavBar = () => {
 		refetchCart();
 	}, [cartData]);
 
+	document.addEventListener('click', (e) => {
+		console.log(!e.target.classList.contains('dropdown-toggle'));
+		if (!e.target.classList.contains('dropdown-toggle')) {
+			setShowDropdown(false);
+		}
+	});
+
 	return (
 		<>
 			<Navbar
@@ -94,11 +101,11 @@ export const NavBar = () => {
 										)}
 									</Link>
 								)}
-								<div drop='start'>
+								<div>
 									<div onClick={() => setShowDropdown(!showDropdown)}>
 										<Image
 											src={profile?.photo}
-											className='rounded-pill'
+											className='rounded-pill dropdown-toggle'
 											style={{
 												width: '40px',
 												height: '40px',
@@ -109,12 +116,12 @@ export const NavBar = () => {
 									</div>
 									{showDropdown && (
 										<div
-											className='position-absolute bg-danger rounded p-2'
+											className='position-absolute bg-light shadow-lg rounded p-2'
 											style={{ right: '50px', width: '150px' }}
 										>
 											{profile?.role === 'user' && (
 												<div
-													className='d-flex align-items-center'
+													className='d-flex align-items-center border-bottom'
 													onClick={() => {
 														navigate('/profile');
 														setShowDropdown(!showDropdown);
@@ -127,7 +134,7 @@ export const NavBar = () => {
 											{profile?.role === 'admin' && (
 												<>
 													<div
-														className='d-flex align-items-center gap-2'
+														className='d-flex align-items-center gap-2 border-bottom'
 														style={{ cursor: 'pointer' }}
 														onClick={() => {
 															navigate('/admin/add-product');
@@ -138,7 +145,7 @@ export const NavBar = () => {
 														<p>Add Product</p>
 													</div>
 													<div
-														className='d-flex align-items-center gap-2'
+														className='d-flex align-items-center gap-2 border-bottom'
 														style={{ cursor: 'pointer' }}
 														onClick={() => {
 															navigate('/admin/products');
